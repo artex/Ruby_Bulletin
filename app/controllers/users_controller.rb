@@ -1,6 +1,17 @@
 class UsersController < ApplicationController
     before_action :authorized, only: [:auto_login]
   
+
+    def confirm
+      @user = User.new(user_params)
+      if !@user.valid?
+        render json: @user.errors, status: 300
+        # render json: {error: "hello"}, status: 300
+
+    else
+        render json: @user
+    end
+    end
     # REGISTER
     def create
       @user = User.create(user_params)
@@ -32,7 +43,9 @@ class UsersController < ApplicationController
     private
   
     def user_params
-      params.permit(:username, :password, :age)
+      params.permit(:name, :email, :password, :role, :phone, :dob, :address, :profile, :create_user_id, :update_user_id, :deleted_user_id, :deleted_at)
+
+
     end
   
   end

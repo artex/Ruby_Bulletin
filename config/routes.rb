@@ -3,4 +3,5 @@ Rails.application.routes.draw do
   resource :users, only: [:create]
   post "/auth/login", to: "users#login"
   get "/auto_login", to: "users#auto_login"
+  post "/user/confirm", to: "users#confirm"
 end

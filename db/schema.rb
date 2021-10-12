@@ -10,20 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_11_035256) do
+ActiveRecord::Schema.define(version: 2021_10_11_090755) do
+
+  create_table "posts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "description", null: false
+    t.integer "status", limit: 1, null: false
+    t.integer "create_user_id", null: false
+    t.integer "update_user_id", null: false
+    t.integer "deleted_user_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "email"
-    t.string "password_digest"
+    t.text "password_digest"
     t.string "profile"
-    t.string "type"
+    t.integer "role", limit: 1
     t.string "phone"
     t.string "address"
     t.date "dob"
     t.integer "create_user_id"
     t.integer "update_user_id"
     t.integer "deleted_user_id"
+    t.date "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
