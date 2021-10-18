@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  # For Users
   resource :users, only: [:create]
   post "/auth/login", to: "users#login"
   get "/auto_login", to: "users#auto_login"
@@ -10,4 +11,7 @@ Rails.application.routes.draw do
   put "/update", to: "users#update"
   put "/user/get", to: "users#get"
   put "/user/delete", to: "users#delete"
+
+  # For Posts
+  get "/post/list", to: "posts#list"
 end

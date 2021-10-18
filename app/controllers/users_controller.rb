@@ -2,13 +2,24 @@ class UsersController < ApplicationController
     before_action :authorized, only: [:auto_login]
   
     def list 
+      @users =[]
       @user = User.where(deleted_at: [nil, ""])
-      render json: @user
+
+      @user.each do |user|
+        @aa = User.find_by(id: user.create_user_id)
+        @bb = User.find_by(id: user.update_user_id)
+        user_info = user.attributes
+        user_info[:user_name] = @aa.name
+        user_info[:update_name] = @bb.name
+        @users << user_info
+      end
+      render json: @users
     end
-      def confirm
-        @user = User.new(user_params)
-        if !@user.valid?
-          render json: @user.errors, status: 300
+
+    def confirm
+      @user = User.new(user_params)
+      if !@user.valid?
+        render json: @user.errors, status: 300
       else
         render json: @user
       end
@@ -66,16 +77,14 @@ class UsersController < ApplicationController
     # LOGGING IN
     def login
         @user = User.find_by(email: params[:email])
-    
         if @user && @user.authenticate(params[:password])
           token = encode_token({user_id: @user.id})
           render json: {user: @user, token: token}
         else
           render json: {error: "Invalid email or password"}, status: 401
         end
-      end
-  
-  
+    end
+
     def auto_login
       render json: @user
     end

@@ -10,18 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_11_090755) do
+ActiveRecord::Schema.define(version: 2021_10_18_085118) do
 
   create_table "posts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "title", null: false
-    t.string "description", null: false
-    t.integer "status", limit: 1, null: false
-    t.integer "create_user_id", null: false
-    t.integer "update_user_id", null: false
-    t.integer "deleted_user_id", null: false
+    t.string "title"
+    t.string "description"
+    t.integer "status"
+    t.bigint "create_user_id"
+    t.bigint "update_user_id"
+    t.integer "deleted_user_id"
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["create_user_id"], name: "fk_rails_7254f98eaf"
+    t.index ["update_user_id"], name: "fk_rails_2a905d8257"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -41,4 +43,6 @@ ActiveRecord::Schema.define(version: 2021_10_11_090755) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "posts", "users", column: "create_user_id"
+  add_foreign_key "posts", "users", column: "update_user_id"
 end
