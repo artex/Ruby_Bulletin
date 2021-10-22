@@ -14,4 +14,10 @@ Rails.application.routes.draw do
 
   # For Posts
   get "/post/list", to: "posts#list"
+  post "/post/confirm", to: "posts#confirm"
+  post "/post/create", to: "posts#create"
+  put "/post/delete", to: "posts#delete"
+  get "/post/detail", to: "posts#details"
+  put "/post/edit", to: "posts#edit"
+  put "/post/update", to: "posts#update"
 end

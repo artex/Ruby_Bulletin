@@ -93,8 +93,6 @@ class UsersController < ApplicationController
   
     def user_params
       params.permit(:name, :email, :password, :role, :phone, :dob, :address, :profile, :create_user_id, :update_user_id, :deleted_user_id, :deleted_at)
-
-
     end
   
   end
