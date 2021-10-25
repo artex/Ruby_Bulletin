@@ -53,6 +53,44 @@ class PostsController < ApplicationController
         render json: {noti: "Post successfully edited"}
     end
 
+    def import
+        user_id = params[:user_id]
+        file = params[:file]
+        if !File.extname(file).eql?(".csv")
+            render json: {error: "Please Choose a csv format."}, status: 422
+        else
+            CSV.foreach(file.path, headers: true) do |row|
+                if(row.count != 3)
+                    break render json: {error: "Post upload csv must have 3 columns"}, status: 422
+                else
+                    if(row.headers[0] != "title" || row.headers[1] != "description" || row.headers[2] != "status")
+                        break render json: {error: "column names should be match with database columns"}, status: 422
+                    end
+                    @post = Post.new
+                    @post.attributes = row.to_hash.slice(*updatable_attributes)
+                    @post.create_user_id = user_id
+                    @post.update_user_id = user_id
+                    if !@post.valid?
+                        errors = @post.errors
+                        break render json: {error1: @post.errors,error2: row[0]}, status: 422
+                    else
+                        @post.save
+                    end
+                    
+                end             
+            end
+        end
+    end
+
+    def updatable_attributes
+        ["title", "description", "status"]
+    end
+
+    def export
+        @post = Post.all
+        render json: @post
+    end
+
     def delete
         @post = Post.find(params[:id])
         @post.update(post_params)

@@ -20,4 +20,6 @@ Rails.application.routes.draw do
   get "/post/detail", to: "posts#details"
   put "/post/edit", to: "posts#edit"
   put "/post/update", to: "posts#update"
+  post "/post/upload", to: "posts#import"
+  get "/post/download", to: "posts#export"
 end
