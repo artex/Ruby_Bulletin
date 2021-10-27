@@ -11,6 +11,10 @@ Rails.application.routes.draw do
   put "/update", to: "users#update"
   put "/user/get", to: "users#get"
   put "/user/delete", to: "users#delete"
+  put "/user/pwupdate", to: "users#pwupdate"
+  put "/user/pwupdated", to: "users#pwupdated"
+  post "/user/reset", to: "users#reset"
+  put "/user/reset_pw", to: "users#reset_pw"
 
   # For Posts
   get "/post/list", to: "posts#list"
@@ -22,4 +26,8 @@ Rails.application.routes.draw do
   put "/post/update", to: "posts#update"
   post "/post/upload", to: "posts#import"
   get "/post/download", to: "posts#export"
+
+  # For Reset Password
+  post "/reset/create", to: "resets#create"
+  post "/reset/update", to: "resets#update"
 end

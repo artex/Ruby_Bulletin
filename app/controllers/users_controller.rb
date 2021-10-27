@@ -68,11 +68,53 @@ class UsersController < ApplicationController
       render json: {data: "Profile Updated Successfully"}
     end
 
+    def pwupdate
+      @user = User.find_by(id: params[:id])
+      if @user && @user.authenticate(params[:current])
+      else
+        render json: {error: "Current Password Wrong!"}, status: 401
+      end
+    end
+    
+    def pwupdated
+      @user = User.find(params[:id])
+      @user.update(user_params)
+      token = encode_token({user_id: @user.id})
+      render json: {user: @user, token: token, noti: "Password is successfully updated"}
+    end
+
     def delete
       @user = User.find(params[:id])
       @user.update(user_params)
       render json: {data: "User successfully deleted"}
     end
+
+    def reset
+      @email = User.find_by(email: params[:email])
+      if (!User.exists?(email: params[:email]))
+        render json: {error: "Email doesn't exist"}, status: 422
+      else
+          @token = @email.signed_id(purpose: "password_reset",expires_in: 15.minutes)
+          # @reset = Reset.new(email: @email, token: @token)
+          # @reset.save
+          UserMailer.welcome_email(email: @email, token: @token).deliver_now
+          render json: {data: "Email sent with password reset instructions.", token: @token, email: @email.email}
+          
+      end
+    end
+
+    def reset_pw
+      @user = User.find_by(email: params[:email])
+      if @user.update(password: params[:password])
+      render json: {data: "Password has been reset"}
+        else
+          render json: {error: "this is error"}, status: 422
+      end
+    end
+    
+    # def reseted
+    #   @user = User.new()
+    # end
 
     # LOGGING IN
     def login
@@ -94,5 +136,4 @@ class UsersController < ApplicationController
     def user_params
       params.permit(:name, :email, :password, :role, :phone, :dob, :address, :profile, :create_user_id, :update_user_id, :deleted_user_id, :deleted_at)
     end
-  
   end
