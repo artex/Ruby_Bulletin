@@ -16,6 +16,23 @@ class PostsController < ApplicationController
         render json: @posts
     end 
 
+    def list_user
+        @posts_user = []
+        @post = Post.where(deleted_at: [nil, ""])
+        @posts = @post.where(create_user_id: params[:id])
+        @posts.each do |post|
+            @aa = post.create_user
+            @bb = post.update_user
+            user_info = post.attributes
+            user_info[:create_user] = @aa.name
+            user_info[:update_user] = @bb.name
+            user_info[:created_date] = post.created_at.strftime("%Y/%m/%d")
+            user_info[:updated_date] = post.updated_at.strftime("%Y/%m/%d")
+            @posts_user << user_info
+        end
+        render json: @posts_user
+    end
+
     def confirm
         @post = Post.new(post_params)
       if !@post.valid?

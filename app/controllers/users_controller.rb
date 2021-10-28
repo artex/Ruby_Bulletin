@@ -11,9 +11,28 @@ class UsersController < ApplicationController
         user_info = user.attributes
         user_info[:user_name] = @aa.name
         user_info[:update_name] = @bb.name
+        user_info[:created_at] = user.created_at.strftime("%Y-%m-%d")
+        user_info[:updated_at] = user.updated_at.strftime("%Y-%m-%d")
         @users << user_info
       end
       render json: @users
+    end
+
+    def list_user
+      @users_user = []
+        @user = User.where(deleted_at: [nil, ""])
+        @users = @user.where(create_user_id: params[:id])
+        @users.each do |user|
+            @aa = User.find_by(id: user.create_user_id)
+            @bb = User.find_by(id: user.update_user_id)
+            user_info = user.attributes
+            user_info[:user_name] = @aa.name
+            user_info[:update_name] = @bb.name
+            user_info[:created_at] = user.created_at.strftime("%Y-%m-%d")
+            user_info[:updated_at] = user.updated_at.strftime("%Y-%m-%d")
+            @users_user << user_info
+        end
+        render json: @users_user
     end
 
     def confirm
